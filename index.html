@@ -230,24 +230,148 @@
   }
 
   /* === HISTORY === */
-  .history h2 {
-    font-size: 0.75rem; text-transform: uppercase;
-    letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-bottom: 12px;
+  .history-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
   }
+  .history-header h2 {
+    font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 2px; color: rgba(255,255,255,0.4);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .session-badge {
+    display: none; font-size: 0.65rem; font-weight: 700;
+    background: var(--foam); color: var(--deep);
+    padding: 1px 7px; border-radius: 10px; min-width: 18px; text-align: center;
+  }
+  .session-badge.visible { display: inline-block; }
+  .history-actions { display: flex; align-items: center; gap: 6px; }
+  .clear-btn {
+    display: none; background: none;
+    border: 1px solid rgba(240,133,110,0.25); color: var(--coral);
+    font-size: 0.65rem; font-family: 'DM Sans', sans-serif;
+    padding: 3px 10px; border-radius: 10px; cursor: pointer;
+    letter-spacing: 0.5px; transition: background 0.2s, color 0.2s;
+  }
+  .clear-btn.visible { display: inline-block; }
+  .clear-btn:hover { background: rgba(240,133,110,0.15); }
+  .toggle-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.4); width: 28px; height: 28px;
+    border-radius: 8px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .toggle-btn:hover { border-color: var(--foam); color: var(--foam); }
+  .toggle-btn .arrow {
+    font-size: 0.8rem; transition: transform 0.3s ease;
+    display: inline-block;
+  }
+  .toggle-btn .arrow.collapsed { transform: rotate(-90deg); }
+
+  .session-list {
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  }
+  .session-list.collapsed { max-height: 0; opacity: 0; }
+
   .session {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px; padding: 14px 16px; margin-bottom: 8px;
     display: flex; justify-content: space-between; align-items: center;
-    animation: slideIn 0.4s ease;
+    animation: slideIn 0.4s ease; position: relative;
   }
   .session .left .stroke-name { font-weight: 700; font-size: 0.95rem; }
   .session .left .meta { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
-  .session .right { text-align: right; }
-  .session .right .kcal { font-weight: 700; font-size: 1.1rem; color: var(--coral); }
-  .session .right .dist { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
+  .session .mid { text-align: right; }
+  .session .mid .kcal { font-weight: 700; font-size: 1.1rem; color: var(--coral); }
+  .session .mid .dist { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
+  .session .del-btn {
+    background: none; border: none; color: rgba(255,255,255,0.15);
+    font-size: 1.1rem; cursor: pointer; padding: 4px 2px 4px 12px;
+    transition: color 0.2s; line-height: 1;
+  }
+  .session .del-btn:hover { color: var(--coral); }
+
+  .session.removing {
+    animation: removeSlide 0.35s ease forwards;
+  }
+  @keyframes removeSlide {
+    to { transform: translateX(60px); opacity: 0; max-height: 0; margin-bottom: 0; padding: 0 16px; }
+  }
+
   .empty-state {
     text-align: center; padding: 24px;
     color: rgba(255,255,255,0.2); font-style: italic; font-size: 0.85rem;
+  }
+
+  /* === CONFIRM DIALOG === */
+  .confirm-overlay {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(11,22,40,0.85); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+  }
+  .confirm-overlay.visible { display: flex; }
+  .confirm-box {
+    background: var(--ocean); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; padding: 28px 24px; text-align: center;
+    max-width: 320px; width: 90%; animation: slideIn 0.3s ease;
+  }
+  .confirm-box p {
+    font-size: 0.95rem; color: var(--white); margin-bottom: 20px; line-height: 1.5;
+  }
+  .confirm-box .confirm-actions { display: flex; gap: 10px; }
+  .confirm-box .confirm-actions button {
+    flex: 1; padding: 12px; border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    font-weight: 700; cursor: pointer; transition: transform 0.15s;
+  }
+  .confirm-box .confirm-actions button:active { transform: scale(0.96); }
+  .confirm-box .btn-cancel {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);
+  }
+  .confirm-box .btn-confirm-del {
+    background: linear-gradient(135deg, var(--coral), #e74c3c); color: white;
+  }
+
+  /* === ERROR TOAST === */
+  .error-toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    z-index: 200; max-width: 420px; width: 90%;
+    background: rgba(231, 76, 60, 0.92); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 12px 18px;
+    display: flex; align-items: flex-start; gap: 10px;
+    animation: toastIn 0.35s ease, toastOut 0.35s ease 3.2s forwards;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .error-toast .toast-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .error-toast .toast-msg {
+    font-size: 0.82rem; color: white; line-height: 1.45;
+  }
+  .error-toast .toast-msg strong { color: var(--sand); }
+  .error-toast .toast-close {
+    background: none; border: none; color: rgba(255,255,255,0.5);
+    font-size: 1rem; cursor: pointer; padding: 0 0 0 8px;
+    flex-shrink: 0; line-height: 1;
+  }
+  .error-toast .toast-close:hover { color: white; }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+    to { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  }
+
+  /* === INPUT ERROR HIGHLIGHT === */
+  .form-group input.input-error,
+  .form-group select.input-error {
+    border-color: var(--coral) !important;
+    background: rgba(240,133,110,0.08);
   }
 
   @keyframes shake {
@@ -398,9 +522,28 @@
 
     <!-- History -->
     <div class="history">
-      <h2>Today's Sessions</h2>
-      <div id="sessionList">
+      <div class="history-header" id="historyHeader">
+        <h2>Today's Sessions <span class="session-badge" id="sessionBadge"></span></h2>
+        <div class="history-actions">
+          <button class="clear-btn" id="clearBtn" onclick="clearAll()" title="Clear all">Clear all</button>
+          <button class="toggle-btn" id="toggleBtn" onclick="toggleHistory()">
+            <span class="arrow" id="toggleArrow">▾</span>
+          </button>
+        </div>
+      </div>
+      <div class="session-list" id="sessionList">
         <div class="empty-state">No sessions yet — go make some waves!</div>
+      </div>
+    </div>
+
+    <!-- Confirm Clear Dialog -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-box">
+        <p>Remove all sessions?<br>This can't be undone.</p>
+        <div class="confirm-actions">
+          <button class="btn-cancel" onclick="cancelClear()">Cancel</button>
+          <button class="btn-confirm-del" onclick="confirmClear()">Clear all</button>
+        </div>
       </div>
     </div>
   </div>
@@ -418,14 +561,93 @@
   let profile = { weight: 65, height: 170, age: 28, sex: 'female', bmi: null, correctionFactor: 1.0 };
   let sessions = [];
 
+  // === ERROR TOAST ===
+  let toastTimer = null;
+  function showError(msg, fieldIds) {
+    // Remove existing toast
+    document.querySelectorAll('.error-toast').forEach(el => el.remove());
+    // Clear previous highlights
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    // Highlight bad fields
+    if (fieldIds) {
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('input-error');
+      });
+    }
+
+    // Create toast
+    const toast = document.createElement('div');
+    toast.className = 'error-toast';
+    toast.innerHTML = `
+      <span class="toast-icon">⚠️</span>
+      <span class="toast-msg">${msg}</span>
+      <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+    `;
+    document.body.appendChild(toast);
+
+    // Auto remove
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.remove();
+      document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    }, 3600);
+  }
+
   // === BMI CALC & COLLAPSE ===
   function calcBMI() {
-    const h = parseFloat(document.getElementById('height').value);
-    const w = parseFloat(document.getElementById('weight').value);
-    const a = parseInt(document.getElementById('age').value);
+    const hRaw = document.getElementById('height').value;
+    const wRaw = document.getElementById('weight').value;
+    const aRaw = document.getElementById('age').value;
     const s = document.getElementById('sex').value;
 
-    if (!h || !w || h < 100 || w < 30) {
+    const h = parseFloat(hRaw);
+    const w = parseFloat(wRaw);
+    const a = parseInt(aRaw);
+
+    // Collect all errors
+    let errors = [];
+    let badFields = [];
+
+    // Height
+    if (!hRaw || isNaN(h)) {
+      errors.push('Please enter your height'); badFields.push('height');
+    } else if (h < 80 || h > 250) {
+      errors.push(`<strong>${h} cm</strong> doesn't look right for height — expected 80–250 cm`);
+      badFields.push('height');
+    }
+
+    // Weight
+    if (!wRaw || isNaN(w)) {
+      errors.push('Please enter your weight'); badFields.push('weight');
+    } else if (w < 20 || w > 300) {
+      errors.push(`<strong>${w} kg</strong> doesn't look right for weight — expected 20–300 kg`);
+      badFields.push('weight');
+    }
+
+    // Age (optional but validate if entered)
+    if (aRaw && !isNaN(a)) {
+      if (a < 5 || a > 120) {
+        errors.push(`<strong>${a} years</strong> doesn't seem right for age — expected 5–120`);
+        badFields.push('age');
+      }
+    }
+
+    // Cross-check: BMI sanity (only if both h and w are in range)
+    if (errors.length === 0) {
+      const testBmi = w / ((h / 100) ** 2);
+      if (testBmi < 10) {
+        errors.push(`That gives a BMI of <strong>${testBmi.toFixed(1)}</strong> — are you sure? Weight seems very low for this height`);
+        badFields.push('weight');
+      } else if (testBmi > 70) {
+        errors.push(`That gives a BMI of <strong>${testBmi.toFixed(1)}</strong> — are you sure? Please double-check your values`);
+        badFields.push('height', 'weight');
+      }
+    }
+
+    if (errors.length > 0) {
+      showError(errors.join('<br>'), badFields);
       const btn = document.querySelector('.btn-bmi');
       btn.style.animation = 'none'; btn.offsetHeight;
       btn.style.animation = 'shake 0.4s ease';
@@ -480,6 +702,8 @@
   }
 
   // === UI ===
+  let historyOpen = true;
+
   function updateUI() {
     const totalKcal = sessions.reduce((s, x) => s + x.kcal, 0);
     const totalDist = sessions.reduce((s, x) => s + x.distance, 0);
@@ -496,39 +720,122 @@
     document.getElementById('sessionCount').textContent = sessions.length;
     document.getElementById('kcalPerMin').textContent = totalMin > 0 ? (totalKcal / totalMin).toFixed(1) : '—';
 
+    // Session badge
+    const badge = document.getElementById('sessionBadge');
+    if (sessions.length > 0) {
+      badge.textContent = sessions.length;
+      badge.classList.add('visible');
+    } else {
+      badge.classList.remove('visible');
+    }
+
+    // Clear all button
+    const clearBtn = document.getElementById('clearBtn');
+    sessions.length > 0 ? clearBtn.classList.add('visible') : clearBtn.classList.remove('visible');
+
+    // Session list
     const list = document.getElementById('sessionList');
     if (sessions.length === 0) {
       list.innerHTML = '<div class="empty-state">No sessions yet — go make some waves!</div>';
     } else {
-      list.innerHTML = sessions.map(s => {
+      list.innerHTML = sessions.map((s, i) => {
         const sl = s.stroke.charAt(0).toUpperCase() + s.stroke.slice(1);
         const il = s.intensity.charAt(0).toUpperCase() + s.intensity.slice(1);
-        return `<div class="session">
+        const timeStr = s.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return `<div class="session" id="session-${i}">
           <div class="left">
             <div class="stroke-name">${sl}</div>
-            <div class="meta">${il} · ${s.duration} min</div>
+            <div class="meta">${il} · ${s.duration} min · ${timeStr}</div>
           </div>
-          <div class="right">
+          <div class="mid">
             <div class="kcal">${s.kcal} kcal</div>
             <div class="dist">${s.distance.toLocaleString()} m</div>
           </div>
+          <button class="del-btn" onclick="removeSession(${i})" title="Remove">✕</button>
         </div>`;
       }).reverse().join('');
     }
 
     if (sessions.length > 0) {
       document.getElementById('proteinAlert').classList.add('visible');
+    } else {
+      document.getElementById('proteinAlert').classList.remove('visible');
     }
+  }
+
+  // === TOGGLE HISTORY ===
+  function toggleHistory() {
+    historyOpen = !historyOpen;
+    document.getElementById('sessionList').classList.toggle('collapsed', !historyOpen);
+    document.getElementById('toggleArrow').classList.toggle('collapsed', !historyOpen);
+  }
+
+  // === REMOVE SINGLE SESSION ===
+  function removeSession(index) {
+    const el = document.getElementById('session-' + index);
+    if (el) {
+      el.classList.add('removing');
+      setTimeout(() => {
+        sessions.splice(index, 1);
+        updateUI();
+      }, 350);
+    } else {
+      sessions.splice(index, 1);
+      updateUI();
+    }
+  }
+
+  // === CLEAR ALL ===
+  function clearAll() {
+    if (sessions.length === 0) return;
+    document.getElementById('confirmOverlay').classList.add('visible');
+  }
+  function cancelClear() {
+    document.getElementById('confirmOverlay').classList.remove('visible');
+  }
+  function confirmClear() {
+    document.getElementById('confirmOverlay').classList.remove('visible');
+    sessions = [];
+    updateUI();
   }
 
   // === LOG ===
   function logSession() {
-    const distance = parseInt(document.getElementById('distance').value) || 0;
-    const duration = parseInt(document.getElementById('duration').value) || 0;
+    const distRaw = document.getElementById('distance').value;
+    const durRaw  = document.getElementById('duration').value;
+    const distance = parseInt(distRaw) || 0;
+    const duration = parseInt(durRaw) || 0;
     const stroke   = document.getElementById('stroke').value;
     const intensity = document.getElementById('intensity').value;
 
-    if (distance <= 0 || duration <= 0) {
+    let errors = [];
+    let badFields = [];
+
+    if (!distRaw || distance <= 0) {
+      errors.push('Enter a distance'); badFields.push('distance');
+    } else if (distance > 20000) {
+      errors.push(`<strong>${distance.toLocaleString()} m</strong> in one session? That's 200+ laps — please double-check`);
+      badFields.push('distance');
+    }
+
+    if (!durRaw || duration <= 0) {
+      errors.push('Enter a duration'); badFields.push('duration');
+    } else if (duration > 480) {
+      errors.push(`<strong>${duration} min</strong> is over 8 hours — that doesn't look right`);
+      badFields.push('duration');
+    }
+
+    // Pace sanity: if both are valid, check speed
+    if (errors.length === 0 && distance > 0 && duration > 0) {
+      const paceMin100m = (duration / (distance / 100));
+      if (paceMin100m < 0.5) {
+        errors.push(`That pace is <strong>${(paceMin100m * 60).toFixed(0)}s per 100m</strong> — faster than an Olympic sprinter! Double-check your values`);
+        badFields.push('distance', 'duration');
+      }
+    }
+
+    if (errors.length > 0) {
+      showError(errors.join('<br>'), badFields);
       const btn = document.querySelector('.btn-log');
       btn.style.animation = 'none'; btn.offsetHeight;
       btn.style.animation = 'shake 0.4s ease';
