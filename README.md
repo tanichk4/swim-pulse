@@ -2,6 +2,8 @@
 
 A swim workout tracker with calorie tracking, daily goal progress, and persistent session history — built with Next.js 15, Supabase, and TypeScript.
 
+https://swim-tracker-prototype.vercel.app/tracker
+
 ---
 
 ## Features
