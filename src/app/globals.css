@@ -237,6 +237,28 @@ header p {
   transition: border-color 0.2s, color 0.2s;
 }
 .profile-strip .edit-btn:hover { border-color: var(--foam); color: var(--foam); }
+.profile-strip .signout-btn {
+  background: none; border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.45); font-size: 0.68rem;
+  padding: 3px 10px; border-radius: 12px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.5px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.profile-strip .signout-btn:hover { border-color: var(--rose); color: var(--rose); }
+.signout-confirm {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.68rem; color: rgba(255,255,255,0.55);
+}
+.signout-confirm-yes, .signout-confirm-cancel {
+  background: none; border: 1px solid rgba(255,255,255,0.12);
+  font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.5px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.signout-confirm-yes { color: var(--rose); }
+.signout-confirm-yes:hover { border-color: var(--rose); }
+.signout-confirm-cancel { color: rgba(255,255,255,0.45); }
+.signout-confirm-cancel:hover { border-color: var(--foam); color: var(--foam); }
 
 /* === GOAL RING === */
 .goal-ring { display: flex; justify-content: center; margin-bottom: 28px; }
