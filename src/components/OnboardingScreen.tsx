@@ -29,6 +29,17 @@ export default function OnboardingScreen({ initialProfile }: Props) {
     age && parseFloat(age) > 0
   )
 
+  const isEditMode = !!initialProfile
+  const isDirty = isEditMode && (
+    height !== (initialProfile!.height?.toString() ?? '') ||
+    weight !== (initialProfile!.weight?.toString() ?? '') ||
+    age    !== (initialProfile!.age?.toString()    ?? '') ||
+    sex    !== (initialProfile!.sex ?? 'male')
+  )
+  const showClose = isEditMode && !isDirty
+  const btnLabel = !isEditMode ? 'Continue →' : isDirty ? 'Save Changes' : 'Close'
+  const btnVisuallyLocked = locked
+
   useEffect(() => {
     if (!toastMsg) return
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
@@ -316,11 +327,11 @@ export default function OnboardingScreen({ initialProfile }: Props) {
 
           <button
             ref={btnRef}
-            className={`btn-continue${locked ? ' btn-continue--locked' : ''}`}
-            onClick={handleSubmit}
+            className={`btn-continue${btnVisuallyLocked ? ' btn-continue--locked' : ''}`}
+            onClick={showClose ? () => router.push('/tracker') : handleSubmit}
             disabled={submitting}
           >
-            {initialProfile ? 'Save Changes →' : 'Continue →'}
+            {btnLabel}
           </button>
         </div>
       </div>
