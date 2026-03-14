@@ -524,6 +524,65 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   80% { transform: translateX(4px); }
 }
 
+/* === AUTH FLOW === */
+.auth-back-btn {
+  position: absolute; top: 16px; left: 16px;
+  background: none; border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4); width: 32px; height: 32px;
+  border-radius: 10px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, color 0.2s; line-height: 1;
+  font-family: 'DM Sans', sans-serif;
+}
+.auth-back-btn:hover { border-color: var(--foam); color: var(--foam); }
+
+.auth-step-content {
+  animation: authStepIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.auth-step-exit {
+  animation: authStepOut 0.22s ease forwards;
+  pointer-events: none;
+}
+@keyframes authStepIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes authStepOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-14px); }
+}
+
+.auth-splash-art {
+  display: flex; justify-content: center;
+  margin: 8px 0 28px;
+}
+
+.auth-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 16px 0 12px; color: rgba(255,255,255,0.3);
+  font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1;
+  height: 1px; background: rgba(255,255,255,0.1);
+}
+
+.auth-social-row {
+  display: flex; justify-content: center; gap: 16px;
+  margin-bottom: 4px;
+}
+.auth-social-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  font-size: 1.1rem;
+}
+.auth-social-btn:hover {
+  border-color: var(--foam); background: rgba(72,201,176,0.08);
+}
+
 /* === BUBBLE FIELD === */
 .bubble-field {
   position: fixed; inset: 0;
